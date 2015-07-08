@@ -16,10 +16,11 @@ UNAME := $(shell uname)
 
 CXX := g++
 INCLUDES := -I.
-COPTS  := -Wall -Wextra -O3
-CDEBUG := -Wall -Wextra -g 
+COPTS  := -Wall -Wextra -fPIC -O3
+CDEBUG := -Wall -Wextra -fPIC -g
 CXXFLAGS := $(COPTS) $(INCLUDES) -D$(ENDIANESS)
 
+DESTDIR :=
 BINDIR := bin
 PREFIX := /usr/local
 INSTALL := install -c
@@ -118,31 +119,27 @@ lib: $(LIBFILENAME)
 
 #Installs the library on a system global location
 install: $(LIBFILENAME)
-	@$(INSTALL) -m 755 $(LIBFILENAME) $(PREFIX)/lib/$(LIBFILENAME)
-	@ln -s -f $(PREFIX)/lib/$(LIBFILENAME) $(PREFIX)/lib/$(LIBSONAME) 
-	@mkdir  -p $(PREFIX)/include/oscpack/ip $(PREFIX)/include/oscpack/osc
-	@$(INSTALL) -m 644 ip/*.h $(PREFIX)/include/oscpack/ip
-	@$(INSTALL) -m 644 osc/*.h $(PREFIX)/include/oscpack/osc
-	@echo "SUCCESS! oscpack has been installed in $(PREFIX)/lib and $(PREFIX)/include/ospack/"
-ifneq ($(UNAME), Darwin)
-	@echo "now doing ldconfig..."
-	@ldconfig
-endif
+	$(INSTALL) -D -m 755 $(LIBFILENAME) $(DESTDIR)/$(PREFIX)/lib/$(LIBFILENAME)
+	ln -s -f $(LIBFILENAME) $(DESTDIR)/$(PREFIX)/lib/$(LIBSONAME)
+	mkdir -p $(DESTDIR)/$(PREFIX)/include/ip $(DESTDIR)/$(PREFIX)/include/osc
+	$(INSTALL) -D -m 644 ip/*.h $(DESTDIR)/$(PREFIX)/include/ip
+	$(INSTALL) -D -m 644 osc/*.h $(DESTDIR)/$(PREFIX)/include/osc
+	@echo "SUCCESS! oscpack has been installed in $(DESTDIR)/$(PREFIX)/lib and $(DESTDIR)/$(PREFIX)/include/ospack/"
 
 #Installs the include/lib structure locally
 install-local: $(LIBFILENAME)
 	@echo ""
 	@echo " Installing in local directory <$(INCLUDEDIR)>"
 	@echo "   > Creating symbolic link"
-	@ln -s $(LIBFILENAME) $(LIBSONAME)
+	ln -s $(LIBFILENAME) $(LIBSONAME)
 	@echo "   > Creating directories"
-	@mkdir -p oscpack/lib
-	@mkdir -p oscpack/include/ip
-	@mkdir -p oscpack/include/osc
+	mkdir -p oscpack/lib
+	mkdir -p oscpack/include/ip
+	mkdir -p oscpack/include/osc
 	@echo "   > Copying files"
-	@mv $(LIBFILENAME) $(LIBSONAME) oscpack/lib
-	@cp ip/*.h oscpack/include/ip
-	@cp osc/*.h oscpack/include/osc
+	mv $(LIBFILENAME) $(LIBSONAME) oscpack/lib
+	cp ip/*.h oscpack/include/ip
+	cp osc/*.h oscpack/include/osc
 	@echo ""
 	@echo "   > Success!"
 
