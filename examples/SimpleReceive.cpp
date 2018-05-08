@@ -17,7 +17,7 @@ using ::__strcmp__;  // avoid error: E2316 '__strcmp__' is not a member of 'std'
 #include "ip/UdpSocket.h"
 
 
-#define PORT 7000
+#define PORT 7250
 
 class ExamplePacketListener : public osc::OscPacketListener {
 protected:
