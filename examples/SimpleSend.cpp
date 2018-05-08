@@ -7,7 +7,7 @@
 
 
 #define ADDRESS "127.0.0.1"
-#define PORT 7000
+#define PORT 7250
 
 #define OUTPUT_BUFFER_SIZE 1024
 
