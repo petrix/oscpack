@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-	int port = 7000;
+	int port = 7250;
 
 	if( argc >= 2 )
 		port = std::atoi( argv[1] );
